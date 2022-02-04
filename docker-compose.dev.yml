@@ -5,18 +5,13 @@ services:
   mongodb:
     image: mongo:5.0.2
     restart: unless-stopped
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=closeradmin
-      - MONGO_INITDB_ROOT_PASSWORD=123456
-      - MONGODB_DATABASE=closer_db
-      - MONGODB_LOCAL_PORT=27017
-      - MONGODB_DOCKER_PORT=27017
-      - NODE_LOCAL_PORT=4000
-      - NODE_DOCKER_PORT=4000
+    env_file: 
+      - ./envs/local/.mongo
     ports:
       - 27017:27017
     volumes:
       - db:/data/db
+    command: mongod --quiet --logpath /dev/null 
 
   app:
     container_name: divors-back-app
