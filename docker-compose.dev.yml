@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+
+  mongodb:
+    image: mongo:5.0.2
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=closeradmin
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      - MONGODB_DATABASE=closer_db
+      - MONGODB_LOCAL_PORT=27017
+      - MONGODB_DOCKER_PORT=27017
+      - NODE_LOCAL_PORT=4000
+      - NODE_DOCKER_PORT=4000
+    ports:
+      - 27017:27017
+    volumes:
+      - db:/data/db
+
+  app:
+    container_name: divors-back-app
+    image: divors-back-app
+    build:
+      context: .
+      dockerfile: ./docker/local/Dockerfile
+      # target: development
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - ./envs/local/.env
+    ports:
+      - 4000:4000
+    depends_on:
+      - mongodb
+    external_links: 
+      - mongodb
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
