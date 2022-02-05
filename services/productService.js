@@ -2,14 +2,14 @@
 
 const globalVar = require("../utils/serverCreation");
 const Utilities = require("../utils/utilities");
-
+const models = require("../models")
 class ProductService {
   /**
    * Servico que permite obtener todos los productos
    */
   static async getAll() {
     try {
-      const products = await globalVar.models.Product.find();
+      const products = await models.Product.find();
       return Utilities.answerOk(
         { products },
         globalVar.successMessages.productsFound,
@@ -33,7 +33,7 @@ class ProductService {
       let allProductsUpdated = [];
 
       for (let i = 0; i < products.length; i++) {
-        let product = await globalVar.models.Product.findOne({
+        let product = await models.Product.findOne({
           _id: products[i]._id,
         });
 
@@ -72,7 +72,7 @@ class ProductService {
       }
 
       for (let i = 0; i < allProductsUpdated.length; i++) {
-        await globalVar.models.Product.updateOne(
+        await models.Product.updateOne(
           { _id: productsIds[index] },
           allProductsUpdated[i]
         );

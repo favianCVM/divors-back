@@ -3,6 +3,7 @@
 const globalVar = require('../utils/serverCreation');
 const Utilities = require('../utils/utilities');
 const OrderService = require('../services/orderService');
+const models = require("../models")
 
 /**
  * Controlador que permite generar un pedido
@@ -13,77 +14,106 @@ const OrderService = require('../services/orderService');
  * @param req.body.paymentInfo --> Informacion del pago que se realizó
  */
 const generateOrder = async (req, res) => {
-    try {
-        console.log('Servicio solicitado ::: POST /orders');
+	const { fields: body, files } = req;
 
-        const authentication = await Utilities.isUserAuthenticated(req);
+	const { deliveryAddress, products, paymentType, paymentInfo, user } = body;
+	try {
+		const authentication = await Utilities.isUserAuthenticated(req);
 
-        if (authentication.statusCode === 401 || authentication.statusCode === 400) {
-            console.log(`${globalVar.errors.invalidCredentials} ::: POST /orders`);
-            return res.json(authentication);
-        } else if (
-            !req.body.deliveryAddress ||
-            !req.body.products ||
-            req.body.products.length === 0 ||
-            !Utilities.validatePaymentType(req.body.paymentType) ||
-            !Utilities.validatePaymentInformation(req.body.paymentInfo, req.body.paymentType) ||
-            !Utilities.validateProducts(req.body.products)
-        ) {
-            console.log(`${globalVar.errors.invalidParams} ::: POST /orders`);
-            return res.json(Utilities.answerError({}, globalVar.errors.invalidParams, 400));
-        } else {
-            const { email } = await globalVar.libs.jwt.decode(req.headers['authorization'], {json:true});
-            const userRequester = await globalVar.models.User.findOne({'email': email});
+		if (
+			authentication.statusCode === 401 ||
+			authentication.statusCode === 400
+		) {
+			console.error(`${globalVar.errors.invalidCredentials} ::: POST /orders`);
+			return res.json(authentication);
+		} else if (
+			!deliveryAddress ||
+			!products ||
+			products.length === 0 ||
+			!Utilities.validatePaymentType(paymentType) ||
+			!Utilities.validatePaymentInformation(paymentInfo, paymentType) ||
+			!Utilities.validateProducts(products)
+		) {
+			console.log(`${globalVar.errors.invalidParams} ::: POST /orders`);
+			return res.json(
+				Utilities.answerError({}, globalVar.errors.invalidParams, 400)
+			);
+		} else {
+			const { email } = await globalVar.libs.jwt.decode(
+				req.headers['authorization'],
+				{ json: true }
+			);
+			const userRequester = await models.User.findOne({
+				email: email
+			});
 
-            if (userRequester) {
-                req.body.user = userRequester._doc._id.toString(); // Asigno el id del usuario logueado
-                const response = await OrderService.createOrder(req.body);
-                return res.json(response);
-            } else {
-                console.log(`${globalVar.errors.unauthorized} ::: POST /orders`);
-                return res.json(Utilities.answerError({}, globalVar.errors.unauthorized, 401));
-            }
-        }
-    } catch (error) {
-        console.log(`${globalVar.errors.unknownError} ::: POST /orders ${error}`);
-        return res.json(Utilities.answerError(error, globalVar.errors.unknownError, 500));
-    }
-}
+			if (userRequester) {
+				user = userRequester._doc._id.toString(); // Asigno el id del usuario logueado
+				const response = await OrderService.createOrder(body);
+				return res.json(response);
+			} else {
+				console.log(`${globalVar.errors.unauthorized} ::: POST /orders`);
+				return res.json(
+					Utilities.answerError({}, globalVar.errors.unauthorized, 401)
+				);
+			}
+		}
+	} catch (error) {
+		console.error(`${globalVar.errors.unknownError} ::: POST /orders ${error}`);
+		return res.json(
+			Utilities.answerError(error, globalVar.errors.unknownError, 500)
+		);
+	}
+};
 
 const changeOrderStatus = async (req, res) => {
-    try {
-        console.log('Servicio solicitado ::: PUT /orders/status');
+	try {
+		const authentication = await Utilities.isUserAuthenticated(req);
 
-        const authentication = await Utilities.isUserAuthenticated(req);
+		if (
+			authentication.statusCode === 401 ||
+			authentication.statusCode === 400
+		) {
+			console.log(
+				`${globalVar.errors.invalidCredentials} ::: PUT /orders/status`
+			);
+			return res.json(authentication);
+		} else if (
+			!req.body.orderId ||
+			(req.body.orderId.length !== 24 && req.body.orderId.length !== 12) ||
+			!Utilities.validateOrderStatus(req.body.status)
+		) {
+			console.log(`${globalVar.errors.invalidParams} ::: PUT /orders/status`);
+			return res.json(
+				Utilities.answerError({}, globalVar.errors.invalidParams, 400)
+			);
+		}
 
-        if (authentication.statusCode === 401 || authentication.statusCode === 400) {
-            console.log(`${globalVar.errors.invalidCredentials} ::: PUT /orders/status`);
-            return res.json(authentication);
-        } else if(
-            !req.body.orderId ||
-            req.body.orderId.length !== 24 && req.body.orderId.length !== 12 ||
-            !Utilities.validateOrderStatus(req.body.status)
-        ) {
-            console.log(`${globalVar.errors.invalidParams} ::: PUT /orders/status`);
-            return res.json(Utilities.answerError({}, globalVar.errors.invalidParams, 400));
-        }
+		const { email } = await globalVar.libs.jwt.decode(
+			req.headers['authorization'],
+			{ json: true }
+		);
+		const userRequester = await models.User.findOne({ email: email });
 
-        const { email } = await globalVar.libs.jwt.decode(req.headers['authorization'], {json:true});
-        const userRequester = await globalVar.models.User.findOne({'email': email});
-
-        if (userRequester && userRequester.userType === 'admin') {
-            const response = await OrderService.changeStatus(req.body);
-            return res.json(response);
-        } else {
-            return res.json(Utilities.answerError({}, globalVar.errors.unauthorized, 401));
-        }
-    } catch (error) {
-        console.log(`${globalVar.errors.unknownError} ::: PUT /orders/status ${error}`);
-        return res.json(Utilities.answerError(error, globalVar.errors.unknownError, 500));
-    }
-}
+		if (userRequester && userRequester.userType === 'admin') {
+			const response = await OrderService.changeStatus(req.body);
+			return res.json(response);
+		} else {
+			return res.json(
+				Utilities.answerError({}, globalVar.errors.unauthorized, 401)
+			);
+		}
+	} catch (error) {
+		console.log(
+			`${globalVar.errors.unknownError} ::: PUT /orders/status ${error}`
+		);
+		return res.json(
+			Utilities.answerError(error, globalVar.errors.unknownError, 500)
+		);
+	}
+};
 
 module.exports = {
-    generateOrder,
-    changeOrderStatus
-}
+	generateOrder,
+	changeOrderStatus
+};

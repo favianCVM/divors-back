@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "dev": "nodemon server --env=dev --cors=false --ext js",
+    "dev": "nodemon server --env=dev --cors=true --ext js",
     "prod": "node server --env=prod --cors=true",
     "seed-admin": "node ./services/seeders/seedAdmin",
     "seed-products": "node ./services/seeders/seedProducts",
@@ -30,7 +30,7 @@
       "prettier --write ."
     ]
   },
-	"husky": {
+  "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }

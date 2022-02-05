@@ -6,7 +6,7 @@
   <!-- <a href="https://saitback.netlify.app">Demo</a> -->
 </div>
 
-<h1 align="center">Sait Back</h1>
+<h1 align="center">Divors Back</h1>
 
 <p align="center">
   <img alt="Github top language" src="https://img.shields.io/github/languages/top/{{YOUR_GITHUB_USERNAME}}/sait-back?color=56BEB8">

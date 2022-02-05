@@ -3,6 +3,7 @@
 const globalVar = require("../utils/serverCreation");
 const dollarRate = require("../files/dollarRate.json");
 const Utilities = require("../utils/utilities");
+const models = require("../models")
 
 class ProductService {
   /**
@@ -12,7 +13,7 @@ class ProductService {
   static async createOrder(data) {
     try {
       const productsIds = data.products.map((element) => element.productId);
-      const products = await globalVar.models.Product.find({
+      const products = await models.Product.find({
         _id: { $in: productsIds },
       });
 
@@ -44,7 +45,7 @@ class ProductService {
         }
 
         for (let index = 0; index < productsIds.length; index++) {
-          await globalVar.models.Product.updateOne(
+          await models.Product.updateOne(
             { _id: productsIds[index] },
             { quantity: quantityOfProducts[index] }
           );
@@ -55,7 +56,7 @@ class ProductService {
           data.paymentType === "zelle"
             ? totalAmount
             : totalAmount * dollarRate.usd.dollarToday;
-        const order = await globalVar.models.Order.create(data);
+        const order = await models.Order.create(data);
         data.orderId = order._doc._id;
 
         return Utilities.answerOk(
@@ -83,7 +84,7 @@ class ProductService {
    */
   static async changeStatus(data) {
     try {
-      const orderStatusUpdated = await globalVar.models.Order.findOneAndUpdate(
+      const orderStatusUpdated = await models.Order.findOneAndUpdate(
         { _id: data.orderId },
         { status: data.status }
       );

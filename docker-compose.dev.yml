@@ -26,13 +26,7 @@ services:
     env_file:
       - ./envs/local/.env
     ports:
-      - 4000:4000
-    depends_on:
-      - mongodb
-    external_links: 
-      - mongodb
-    stdin_open: true
-    tty: true
+      - 3333:3333
 
 volumes:
   db:
