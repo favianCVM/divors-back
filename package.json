@@ -8,13 +8,7 @@
     "dev": "nodemon server --env=dev --cors=true --ext js",
     "prod": "node server --env=prod --cors=true",
     "seed-admin": "node ./services/seeders/seedAdmin",
-    "seed-products": "node ./services/seeders/seedProducts",
-    "dev:docker:prod": "docker-compose -f docker-compose.prod.yml up",
-    "dev:docker:local": "docker-compose -f docker-compose.dev.yml up",
-    "build:docker:prod": "docker-compose -f docker-compose.prod.yml build --no-cache",
-    "build:docker:local": "docker-compose -f docker-compose.dev.yml build --no-cache",
-    "down:docker:prod": "docker-compose -f docker-compose.prod.yml down --remove-orphans",
-    "down:docker:local": "docker-compose -f docker-compose.dev.yml down --remove-orphans"
+    "seed-products": "node ./services/seeders/seedProducts"
   },
   "lint-staged": {
     "controllers/**/*.{js,jsx,json}": [
