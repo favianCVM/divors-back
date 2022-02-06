@@ -1,66 +1,81 @@
 {
-  "name": "divors-back",
-  "version": "1.0.0",
-  "description": "backend of divors",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index",
-    "dev": "nodemon server --env=dev --cors=true --ext js",
-    "prod": "node server --env=prod --cors=true",
-    "seed-admin": "node ./services/seeders/seedAdmin",
-    "seed-products": "node ./services/seeders/seedProducts"
-  },
-  "lint-staged": {
-    "controllers/**/*.{js,jsx,json}": [
-      "prettier --write ."
-    ],
-    "utis/**/*.{js,jsx,json}": [
-      "prettier --write ."
-    ],
-    "services/**/*.{js,jsx,json}": [
-      "prettier --write ."
-    ],
-    "models/**/*.{js,jsx,json}": [
-      "prettier --write ."
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "axios": "^0.25.0",
-    "bcrypt": "^5.0.1",
-    "bcryptjs": "^2.4.3",
-    "cloudinary": "^1.27.1",
-    "cors": "^2.8.5",
-    "cron": "^1.8.2",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "express-async-errors": "^3.1.1",
-    "express-fileupload": "^1.2.1",
-    "express-formidable": "^1.2.0",
-    "express-jwt": "^6.1.0",
-    "formidable": "^1.2.2",
-    "fs": "^0.0.1-security",
-    "handlebars": "^4.7.7",
-    "helmet": "^5.0.2",
-    "husky": "^7.0.4",
-    "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.21",
-    "make-runnable": "^1.3.10",
-    "mongo": "^0.1.0",
-    "mongoose": "^6.2.0",
-    "morgan": "^1.10.0",
-    "nodemailer": "^6.7.2",
-    "nodemon": "^2.0.13",
-    "randomstring": "^1.2.2",
-    "serve": "^12.0.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.13"
-  }
+	"name": "divors-back",
+	"version": "1.0.0",
+	"description": "backend of divors",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index",
+		"dev": "nodemon server --env=dev --cors=true --ext js",
+		"prod": "node server --env=prod --cors=true",
+		"seed-admin": "node ./services/seeders/seedAdmin",
+		"seed-products": "node ./services/seeders/seedProducts",
+		"lint": "eslint . --ext js --ext jsx",
+		"format": "prettier --write ."
+	},
+	"lint-staged": {
+		"controllers/**/*.{js,jsx,json}": [
+			"prettier --write ."
+		],
+		"utis/**/*.{js,jsx,json}": [
+			"prettier --write ."
+		],
+		"services/**/*.{js,jsx,json}": [
+			"prettier --write ."
+		],
+		"models/**/*.{js,jsx,json}": [
+			"prettier --write ."
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"axios": "^0.25.0",
+		"bcrypt": "^5.0.1",
+		"bcryptjs": "^2.4.3",
+		"cloudinary": "^1.27.1",
+		"cors": "^2.8.5",
+		"cron": "^1.8.2",
+		"dotenv": "^10.0.0",
+		"express": "^4.17.1",
+		"express-async-errors": "^3.1.1",
+		"express-fileupload": "^1.2.1",
+		"express-formidable": "^1.2.0",
+		"express-jwt": "^6.1.0",
+		"formidable": "^1.2.2",
+		"fs": "^0.0.1-security",
+		"handlebars": "^4.7.7",
+		"helmet": "^5.0.2",
+		"husky": "^7.0.4",
+		"jsonwebtoken": "^8.5.1",
+		"lodash": "^4.17.21",
+		"make-runnable": "^1.3.10",
+		"mongo": "^0.1.0",
+		"mongoose": "^6.2.0",
+		"morgan": "^1.10.0",
+		"nodemailer": "^6.7.2",
+		"nodemon": "^2.0.13",
+		"randomstring": "^1.2.2",
+		"serve": "^12.0.1"
+	},
+	"devDependencies": {
+		"eslint": "^8.2.0",
+		"eslint-config-airbnb": "^19.0.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-import": "^2.25.3",
+		"eslint-plugin-jsx-a11y": "^6.5.1",
+		"eslint-plugin-prettier": "^4.0.0",
+		"eslint-plugin-react": "^7.27.1",
+		"eslint-plugin-react-hooks": "^4.3.0",
+		"husky": "^7.0.4",
+		"lint-staged": "^12.0.3",
+		"nodemon": "1.18.11",
+		"npm-run-all": "^4.1.5",
+		"optimize-css-assets-webpack-plugin": "^5.0.3",
+		"prettier": "^2.4.1"
+	}
 }

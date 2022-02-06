@@ -11,13 +11,11 @@ const timezone = moment.tz('America/Caracas').format('YYYY-MM-DD hh:mm:ss A');
 // Longitud de argumentos en script (dev-server / prod-server)
 const arglen = process.argv ? process.argv.length : 0;
 const targetEnv = arglen > 3 ? process.argv[2].split('=')[1] : 'dev'; // Tipo de ambiente a usar? dev/prod Por defecto=dev
-// const useCors = arglen > 3 ? process.argv[3].split('=')[1] : 'false'; 
+// const useCors = arglen > 3 ? process.argv[3].split('=')[1] : 'false';
 const useCors = true;
 // Se usa cors? - Si/No - Por defecto=false
 
 const config = require('../config/' + targetEnv + '/config');
-
-
 
 module.exports = {
 	libs: {
@@ -27,6 +25,9 @@ module.exports = {
 		randomstring
 	},
 	presentation: ['10kg', '20kg', '30kg', '40kg'],
+	userTypes: {
+		admin: 'admin'
+	},
 	banks: [
 		'Banco Mercantil',
 		'Banco Provicial',
@@ -76,5 +77,5 @@ module.exports = {
 		productsUpdated: 'Productos actualizados exitosamente',
 		orderGenerated: 'Pedido generado exitosamente',
 		orderStatusChanged: 'Status de pedido cambiada exitosamente'
-	},
+	}
 };

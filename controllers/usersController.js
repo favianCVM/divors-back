@@ -16,7 +16,7 @@ const globalVar = require('../utils/serverCreation');
  * @param {String} status Estatus del usuario ('active' o 'inactive')
  */
 const createUser = async (req, res) => {
-	const { fields: body, files } = req;
+	const { body, files } = req;
 
 	const {
 		fname,
@@ -30,14 +30,14 @@ const createUser = async (req, res) => {
 	} = body;
 	try {
 		if (
-			fname ||
-			lname ||
-			email ||
-			password ||
-			uniqueId ||
-			phoneNumber ||
-			address ||
-			status ||
+			!fname ||
+			!lname ||
+			!email ||
+			!password ||
+			!uniqueId ||
+			!phoneNumber ||
+			!address ||
+			!status ||
 			!Utilities.validateOnlyLetters(fname) ||
 			!Utilities.validateOnlyLetters(lname) ||
 			!Utilities.validateEmail(email) ||
@@ -45,18 +45,31 @@ const createUser = async (req, res) => {
 			!Utilities.validatePhoneNumber(phoneNumber)
 		) {
 			console.log(`${globalVar.errors.invalidParams} ::: POST /users`);
-			return res.json(
-				Utilities.answerError({}, globalVar.errors.invalidParams, 400)
-			);
+			return res
+				.status(400)
+				.json(Utilities.answerError({}, globalVar.errors.invalidParams, 400));
 		} else {
 			const response = await UserService.create(body);
 			return res.json(response);
 		}
 	} catch (error) {
-		console.log(`${globalVar.errors.unknownError} ::: POST /users ${error}`);
-		return res.json(
-			Utilities.answerError(error, globalVar.errors.unknownError, 500)
-		);
+		Utilities.logError({
+			method: 'POST',
+			error,
+			route: '/users'
+		});
+
+		return res
+			.status(500)
+			.json(
+				Utilities.answerError(
+					error,
+					typeof error === 'object'
+						? error.message
+						: globalVar.errors.unknownError,
+					typeof error === 'object' ? error.statusCode : 500
+				)
+			);
 	}
 };
 

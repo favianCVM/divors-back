@@ -11,7 +11,7 @@ class AuthService {
 	 * @param password --> Contraseña del usuario
 	 */
 	static authenticate(user, res) {
-		return new Promise( async (resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const userFound = await models.User.findOne({
 					email: user.email

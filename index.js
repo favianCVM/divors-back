@@ -29,9 +29,10 @@ server.use(
 	(req, res, next) => {
 		req.body = req.fields;
 
-		console.log("Form data ::: ");
+		console.log('Form data ::: ');
 		console.log('body :', req.body);
 		console.log('files :', req.files);
+		console.log('Headers :::', req.headers);
 
 		next();
 	},

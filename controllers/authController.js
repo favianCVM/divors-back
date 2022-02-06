@@ -33,7 +33,9 @@ const authenticateUser = async (req, res) => {
 			.json(
 				Utilities.answerError(
 					error,
-					typeof error === 'object' ? error.message : globalVar.errors.unknownError,
+					typeof error === 'object'
+						? error.message
+						: globalVar.errors.unknownError,
 					typeof error === 'object' ? error.statusCode : 500
 				)
 			);
@@ -82,10 +84,23 @@ const killSession = async (req, res) => {
 			}
 		}
 	} catch (error) {
-		console.log(`${globalVar.errors.unknownError} ::: GET /logout ${error}`);
-		return res.json(
-			Utilities.answerError(error, globalVar.errors.unknownError, 500)
-		);
+		Utilities.logError({
+			method: 'GET',
+			error,
+			route: '/logout'
+		});
+
+		return res
+			.status(500)
+			.json(
+				Utilities.answerError(
+					error,
+					typeof error === 'object'
+						? error.message
+						: globalVar.errors.unknownError,
+					typeof error === 'object' ? error.statusCode : 500
+				)
+			);
 	}
 };
 

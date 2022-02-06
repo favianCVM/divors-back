@@ -34,12 +34,12 @@ const cronCallback = async () => {
 			});
 		}
 	} catch (error) {
-		console.error(error)
+		console.error(error);
 	}
 };
 
 const dollarRateCron = new CronJob(
-	'* * * 1 * *',
+	'* * * */1 * *',
 	cronCallback,
 	null,
 	true,

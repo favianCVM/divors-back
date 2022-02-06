@@ -3,7 +3,7 @@
 const Utilities = require('../utils/utilities');
 const ProductService = require('../services/productService');
 const globalVar = require('../utils/serverCreation');
-const models = require("../models")
+const models = require('../models');
 
 /**
  * Controlador que permite obtener todos los productos

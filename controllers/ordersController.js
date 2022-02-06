@@ -3,7 +3,7 @@
 const globalVar = require('../utils/serverCreation');
 const Utilities = require('../utils/utilities');
 const OrderService = require('../services/orderService');
-const models = require("../models")
+const models = require('../models');
 
 /**
  * Controlador que permite generar un pedido

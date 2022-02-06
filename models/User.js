@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const mongoose = require("mongoose");
-const globalVar = require("../utils/serverCreation");
+const mongoose = require('mongoose');
+const globalVar = require('../utils/serverCreation');
 
 /**
  * Modelo para guardar los usuarios
@@ -15,27 +15,27 @@ const globalVar = require("../utils/serverCreation");
  * @param status --> Estatus del usuario ('active' o 'inactive')
  */
 const UserSchema = new mongoose.Schema(
-  {
-    fname: String,
-    lname: String,
-    email: String,
-    password: String,
-    uniqueId: String, // Numero de identificacion (Cedula, pasaporte)
-    phoneNumber: String,
-    address: String,
-    status: {
-      type: String,
-      enum: ["active", "inactive"],
-    },
-    userType: {
-      type: String,
-      enum: ["admin", "common"],
-    },
-    createdAt: { type: String, default: globalVar.timezone },
-  },
-  {
-    versionKey: false,
-  }
+	{
+		fname: String,
+		lname: String,
+		email: String,
+		password: String,
+		uniqueId: String, // Numero de identificacion (Cedula, pasaporte)
+		phoneNumber: String,
+		address: String,
+		status: {
+			type: String,
+			enum: ['active', 'inactive']
+		},
+		userType: {
+			type: String,
+			enum: ['admin', 'common']
+		},
+		createdAt: { type: String, default: globalVar.timezone }
+	},
+	{
+		versionKey: false
+	}
 );
 
-module.exports = mongoose.model("User", UserSchema, "users");
+module.exports = mongoose.model('User', UserSchema, 'users');

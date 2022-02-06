@@ -5,8 +5,8 @@ const UserSession = require('./UserSession');
 const Order = require('./Order');
 
 module.exports = {
-  Product,
-  User,
-  UserSession,
-  Order
-}
+	Product,
+	User,
+	UserSession,
+	Order
+};

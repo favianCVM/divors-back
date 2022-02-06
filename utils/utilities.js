@@ -8,59 +8,68 @@ const regexPhoneNumber =
 	/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
 class Utilities {
-
 	/// CONVERTIR ESTE UTIL A UNA PROMISE
 	static async isUserAuthenticated(req) {
-		let token = req.headers['authorization'];
+		return new Promise(async (resolve, reject) => {
+			let token = req.headers['authorization'];
 
-		if (!token) {
-			return Utilities.answerError({}, globalVar.errors.notLoggedIn, 401);
-		}
+			console.log('token :', token);
 
-		token = token.replace('Bearer ', '');
-
-		try {
-			// Verifico si el token es valido
-			const response = await globalVar.libs.jwt.verify(
-				token,
-				globalVar.saltJwt
-			);
-			const tokenVerified = await models.UserSession.findOne({
-				token: token
-			});
-
-			if (tokenVerified) {
-				return Utilities.answerOk(
-					response,
-					globalVar.errors.authenticated,
-					200
-				);
-			} else {
-				return Utilities.answerError(
-					tokenVerified,
-					globalVar.errors.invalidToken,
-					401
+			if (!token) {
+				return reject(
+					Utilities.answerError({}, globalVar.errors.notLoggedIn, 401)
 				);
 			}
-		} catch (error) {
-			if (error.message === 'jwt expired') {
-				// The token is already expired so I remove from UserSession table
-				const deletedTokenResponse = await models.UserSession.deleteOne({
-					token: req.headers['authorization']
+
+			token = token.replace('Bearer ', '');
+
+			try {
+				// Verifico si el token es valido
+				const response = await globalVar.libs.jwt.verify(
+					token,
+					globalVar.saltJwt
+				);
+				const tokenVerified = await models.UserSession.findOne({
+					token: token
 				});
-				return Utilities.answerError(
-					deletedTokenResponse,
-					globalVar.errors.tokenExpired,
-					401
-				);
-			} else if (
-				error.message === 'invalid signature' ||
-				error.message === 'jwt malformed' ||
-				error.message === 'invalid token'
-			) {
-				return Utilities.answerError(error, globalVar.errors.invalidToken, 400);
+
+				if (tokenVerified) {
+					return resolve(
+						Utilities.answerOk(response, globalVar.errors.authenticated, 200)
+					);
+				} else {
+					return reject(
+						Utilities.answerError(
+							tokenVerified,
+							globalVar.errors.invalidToken,
+							401
+						)
+					);
+				}
+			} catch (error) {
+				if (error.message === 'jwt expired') {
+					// The token is already expired so I remove from UserSession table
+					const deletedTokenResponse = await models.UserSession.deleteOne({
+						token: req.headers['authorization']
+					});
+					return reject(
+						Utilities.answerError(
+							deletedTokenResponse,
+							globalVar.errors.tokenExpired,
+							401
+						)
+					);
+				} else if (
+					error.message === 'invalid signature' ||
+					error.message === 'jwt malformed' ||
+					error.message === 'invalid token'
+				) {
+					return reject(
+						Utilities.answerError(error, globalVar.errors.invalidToken, 400)
+					);
+				}
 			}
-		}
+		});
 	}
 
 	static answerOk(data, message, statusCode) {
@@ -79,7 +88,9 @@ class Utilities {
 	static logError({ error, method, route }) {
 		console.error(
 			`${
-				typeof error === 'object' ? error.message : globalVar.errors.unknownError
+				typeof error === 'object'
+					? error.message
+					: globalVar.errors.unknownError
 			} ::: GET /login ${JSON.stringify(error)}`
 		);
 	}
@@ -196,7 +207,7 @@ class Utilities {
 
 	/**
 	 * Metodo para validar si el tipo de pago es correcto
-	*/
+	 */
 
 	// ESTE TAMBIEN
 	static validatePaymentType(value) {

@@ -13,7 +13,7 @@
 	},
 	"plugins": ["react"],
 	"rules": {
-		"react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+		"react/jsx-filename-extension": [1, { "extensions": [".js"] }],
 		"no-alert": 0,
 		// "indent": ["error", 2, { "SwitchCase": 1 }],
 		"no-prototype-builtins": "off",
