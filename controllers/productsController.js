@@ -9,8 +9,6 @@ const models = require('../models');
  * Controlador que permite obtener todos los productos
  */
 const getProducts = async (req, res) => {
-	const { fields: body, files } = req;
-
 	try {
 		const response = await ProductService.getAll();
 		return res.json(response);
@@ -27,9 +25,10 @@ const getProducts = async (req, res) => {
  * @param req.body.products --> Informacion de cada producto actualizar
  */
 const updateProductInventory = async (req, res) => {
-	const { fields: body, files } = req;
+	const { body, files } = req;
 
 	const { products } = body;
+
 	try {
 		const authentication = await Utilities.isUserAuthenticated(req);
 
@@ -37,19 +36,27 @@ const updateProductInventory = async (req, res) => {
 			authentication.statusCode === 401 ||
 			authentication.statusCode === 400
 		) {
-			console.log(
-				`${globalVar.errors.invalidCredentials} ::: PUT /products/update`
-			);
-			return res.json(authentication);
+			Utilities.logError({
+				error: globalVar.errors.invalidCredentials,
+				method: 'PUT',
+				route: '/products/update'
+			});
+
+			return res.status(401).json(authentication);
 		} else if (
 			!products ||
 			products.length === 0 ||
 			!Utilities.validateProducts(products)
 		) {
-			console.log(`${globalVar.errors.invalidParams} ::: PUT /products/update`);
-			return res.json(
-				Utilities.answerError({}, globalVar.errors.invalidParams, 400)
-			);
+			Utilities.logError({
+				error: globalVar.errors.invalidParams,
+				method: 'PUT',
+				route: '/products/update'
+			});
+
+			return res
+				.status(400)
+				.json(Utilities.answerError({}, globalVar.errors.invalidParams, 400));
 		}
 
 		const { email } = await globalVar.libs.jwt.decode(
@@ -62,18 +69,34 @@ const updateProductInventory = async (req, res) => {
 			const response = await ProductService.updateProducts(products);
 			return res.json(response);
 		} else {
-			console.log(`${globalVar.errors.unauthorized} ::: PUT /products/update`);
-			return res.json(
-				Utilities.answerError({}, globalVar.errors.unauthorized, 401)
-			);
+			Utilities.logError({
+				error: globalVar.errors.unauthorized,
+				method: 'PUT',
+				route: '/products/update'
+			});
+
+			return res
+				.status(401)
+				.json(Utilities.answerError({}, globalVar.errors.unauthorized, 401));
 		}
 	} catch (error) {
-		console.log(
-			`${globalVar.errors.unknownError} ::: PUT /products/update ${error}`
-		);
-		return res.json(
-			Utilities.answerError(error, globalVar.errors.unknownError, 500)
-		);
+		Utilities.logError({
+			method: 'PUT',
+			error,
+			route: '/products/update'
+		});
+
+		return res
+			.status(500)
+			.json(
+				Utilities.answerError(
+					error,
+					typeof error === 'object'
+						? error.message
+						: globalVar.errors.unknownError,
+					typeof error === 'object' ? error.statusCode : 500
+				)
+			);
 	}
 };
 

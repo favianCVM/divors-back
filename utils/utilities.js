@@ -1,5 +1,6 @@
 'use strict';
 
+const models = require('../models');
 const globalVar = require('./serverCreation');
 const regexOnlyLetters = /^[a-zA-Z ]*$/;
 const regOnlyNumbers = /^[0-9]*$/;
@@ -8,12 +9,9 @@ const regexPhoneNumber =
 	/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
 class Utilities {
-	/// CONVERTIR ESTE UTIL A UNA PROMISE
 	static async isUserAuthenticated(req) {
 		return new Promise(async (resolve, reject) => {
 			let token = req.headers['authorization'];
-
-			console.log('token :', token);
 
 			if (!token) {
 				return reject(
@@ -29,8 +27,9 @@ class Utilities {
 					token,
 					globalVar.saltJwt
 				);
+
 				const tokenVerified = await models.UserSession.findOne({
-					token: token
+					token
 				});
 
 				if (tokenVerified) {
@@ -50,8 +49,9 @@ class Utilities {
 				if (error.message === 'jwt expired') {
 					// The token is already expired so I remove from UserSession table
 					const deletedTokenResponse = await models.UserSession.deleteOne({
-						token: req.headers['authorization']
+						token
 					});
+
 					return reject(
 						Utilities.answerError(
 							deletedTokenResponse,
@@ -65,7 +65,7 @@ class Utilities {
 					error.message === 'invalid token'
 				) {
 					return reject(
-						Utilities.answerError(error, globalVar.errors.invalidToken, 400)
+						Utilities.answerError(error, globalVar.errors.invalidToken, 401)
 					);
 				}
 			}
@@ -91,7 +91,7 @@ class Utilities {
 				typeof error === 'object'
 					? error.message
 					: globalVar.errors.unknownError
-			} ::: GET /login ${JSON.stringify(error)}`
+			} ::: ${method} /${route} ${JSON.stringify(error)}`
 		);
 	}
 
@@ -151,7 +151,6 @@ class Utilities {
 		return false;
 	}
 
-	//CONVERTIR ESTE METODO A UNA PROMISE
 	static validateProducts(products, updateInventory) {
 		let validProducts = true;
 
@@ -190,14 +189,12 @@ class Utilities {
 		}
 	}
 
-	// ESTE TAMBIEN A PROMISE
 	static validateProductType(value) {
 		if (value && (value === 'base' || value === 'sombra' || value === 'bolsa'))
 			return true;
 		return false;
 	}
 
-	// ESTE +>>>>>>>
 	static validateOrderStatus(value) {
 		if (value && (value === 'shipped' || value === 'delivered')) {
 			return true;
@@ -209,7 +206,6 @@ class Utilities {
 	 * Metodo para validar si el tipo de pago es correcto
 	 */
 
-	// ESTE TAMBIEN
 	static validatePaymentType(value) {
 		if (
 			value &&
@@ -226,7 +222,6 @@ class Utilities {
 	 * Metodo para validar atributos dentro de la informacion de pago según su
 	 * tipo de pago
 	 */
-	// ESTE TAMBIEN =>>>>>
 	static validatePaymentInformation(paymentInfo, paymentType) {
 		if (!paymentInfo) {
 			return false;
