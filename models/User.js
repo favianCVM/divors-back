@@ -24,10 +24,12 @@ const UserSchema = new mongoose.Schema(
 		phoneNumber: String,
 		address: String,
 		status: {
+			default: 'active',
 			type: String,
 			enum: ['active', 'inactive']
 		},
 		userType: {
+			default: 'common',
 			type: String,
 			enum: ['admin', 'common']
 		},

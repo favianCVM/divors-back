@@ -44,7 +44,11 @@ const createUser = async (req, res) => {
 			!Utilities.validateUserStatus(status) ||
 			!Utilities.validatePhoneNumber(phoneNumber)
 		) {
-			console.log(`${globalVar.errors.invalidParams} ::: POST /users`);
+			Utilities.logError({
+				error: globalVar.errors.invalidParams,
+				route: '/users',
+				method: 'POST'
+			});
 			return res
 				.status(400)
 				.json(Utilities.answerError({}, globalVar.errors.invalidParams, 400));

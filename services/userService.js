@@ -11,23 +11,32 @@ class UserService {
 	static create(userData) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const user = await models.User.findOne({
+				const usedEmail = await models.User.findOne({
 					email: userData.email
 				});
 
-				if (user) {
-					console.info(`${globalVar.errors.userAlreadyExist} ::: POST /users`);
+				const usedUniqueId = await models.User.findOne({
+					uniqueId: userData.uniqueId
+				});
+
+				if (usedUniqueId || usedEmail) {
+					Utilities.logError({
+						error: globalVar.errors.userAlreadyExist,
+						method: 'POST',
+						route: '/users'
+					});
+
 					return reject(
-						Utilities.answerError({}, globalVar.errors.userAlreadyExist, 202)
+						Utilities.answerError({}, globalVar.errors.userAlreadyExist, 400)
 					);
 				} else {
 					userData.password = await globalVar.libs.bcrypt.hash(
 						userData.password,
 						globalVar.saltRoundsBcrypt
 					);
-					userData.status = 'active'; //By default the user is going to be created as active
 
 					const response = await models.User.create(userData);
+
 					return resolve(
 						Utilities.answerOk(
 							{ user: response },
@@ -37,9 +46,12 @@ class UserService {
 					);
 				}
 			} catch (error) {
-				console.error(
-					`${globalVar.errors.unknownError} ::: POST /users ${error}`
-				);
+				Utilities.logError({
+					error: globalVar.errors.unknownError,
+					method: 'POST',
+					route: '/users'
+				});
+
 				return reject(
 					Utilities.answerError(error, globalVar.errors.unknownError, 500)
 				);
