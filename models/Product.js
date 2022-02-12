@@ -23,7 +23,6 @@ const ProductSchema = new mongoose.Schema(
 		quantity: Number,
 		productType: {
 			type: String,
-			enum: ['base', 'sombra', 'bolsa']
 		},
 		productImages: [
 			{
@@ -34,7 +33,7 @@ const ProductSchema = new mongoose.Schema(
 		description: String,
 		profit: {
 			type: Number,
-			default: 0.7 // Margen de ganancia del producto (Costo/ganancia)
+			default: 0.7 // Margen de ganancia del producto (Costo/ganancia) //modificable por el admin
 		},
 		createdAt: {
 			type: String,

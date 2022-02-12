@@ -39,7 +39,7 @@ const cronCallback = async () => {
 };
 
 const dollarRateCron = new CronJob(
-	'* * * */1 * *',
+	'0 4 * * 1',
 	cronCallback,
 	null,
 	true,

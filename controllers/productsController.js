@@ -100,7 +100,25 @@ const updateProductInventory = async (req, res) => {
 	}
 };
 
+/**
+ * Controlador para realizar busqueda de productos en el inventario de productos
+ * @param req.query --> Informacion de cada producto actualizar
+ */
+const searchProducts = (req, res) => {
+
+}
+
+/**
+ * Controlador para realizar busqueda de un producto en especifico en el inventario de productos
+ * @param req.query --> Informacion de cada producto actualizar
+ */
+const getProduct = (req, res) => {
+
+}
+
 module.exports = {
 	getProducts,
-	updateProductInventory
+	updateProductInventory,
+	searchProducts,
+	getProduct
 };

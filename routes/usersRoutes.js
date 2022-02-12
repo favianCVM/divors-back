@@ -5,7 +5,7 @@ const UserController = require('../controllers/usersController');
 
 router.post('/', UserController.createUser);
 router.all('*', (req, res, next) => {
-	res.json({
+	res.status(404).json({
 		message: 'Recurso no encontrado',
 		statusCode: 404
 	});

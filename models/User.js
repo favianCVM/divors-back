@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema(
 		userType: {
 			default: 'common',
 			type: String,
-			enum: ['admin', 'common']
+			enum: ['superAdmin', 'admin', 'common']
 		},
 		createdAt: { type: String, default: globalVar.timezone }
 	},
